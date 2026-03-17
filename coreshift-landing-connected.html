@@ -1,0 +1,783 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CoreShift — Developer Infrastructure Platform</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --dark-bg: #0a0a0a;
+            --dark-secondary: #1a1a1a;
+            --dark-tertiary: #2a2a2a;
+            --accent-amber: #f59e0b;
+            --accent-blue: #3b82f6;
+            --text-primary: #f3f4f6;
+            --text-secondary: #d1d5db;
+            --border-color: rgba(255, 255, 255, 0.1);
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Outfit', sans-serif;
+            background: var(--dark-bg);
+            color: var(--text-primary);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* ===== ANIMATED BACKGROUND ===== */
+        .animated-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 50%, #0a0a0a 100%);
+            opacity: 0.5;
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        .blob {
+            position: fixed;
+            border-radius: 50%;
+            opacity: 0.08;
+            z-index: -1;
+            filter: blur(80px);
+            animation: float 20s infinite ease-in-out;
+        }
+
+        .blob-1 {
+            width: 600px;
+            height: 600px;
+            background: var(--accent-amber);
+            top: -300px;
+            right: -300px;
+            animation-delay: 0s;
+        }
+
+        .blob-2 {
+            width: 500px;
+            height: 500px;
+            background: var(--accent-blue);
+            bottom: -250px;
+            left: -250px;
+            animation-delay: 5s;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translate(0, 0); }
+            50% { transform: translate(30px, 30px); }
+        }
+
+        /* ===== LIQUID GLASS EFFECT ===== */
+        .glass {
+            background: rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            border-radius: 16px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .glass::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, transparent 50%, rgba(0, 0, 0, 0.1) 100%);
+            pointer-events: none;
+        }
+
+        /* ===== NAVIGATION ===== */
+        nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            backdrop-filter: blur(10px);
+            background: rgba(10, 10, 10, 0.8);
+            border-bottom: 1px solid var(--border-color);
+            z-index: 1000;
+            padding: 1rem 2rem;
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-family: 'Syne', sans-serif;
+            font-size: 1.5rem;
+            font-weight: 700;
+            letter-spacing: -1px;
+            background: linear-gradient(135deg, var(--accent-amber), var(--accent-blue));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            align-items: center;
+            list-style: none;
+        }
+
+        .nav-links a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 0.95rem;
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+
+        .nav-links a:hover {
+            color: var(--accent-amber);
+        }
+
+        .btn-primary {
+            padding: 0.75rem 1.5rem;
+            background: var(--accent-amber);
+            color: #000;
+            border: none;
+            border-radius: 8px;
+            font-family: 'Syne', sans-serif;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.95rem;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 24px rgba(245, 158, 11, 0.3);
+        }
+
+        /* ===== HERO SECTION ===== */
+        .hero {
+            padding: 150px 2rem 100px;
+            text-align: center;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .hero h1 {
+            font-family: 'Syne', sans-serif;
+            font-size: clamp(2.5rem, 8vw, 4rem);
+            font-weight: 700;
+            line-height: 1.1;
+            margin-bottom: 1.5rem;
+            letter-spacing: -1.5px;
+            animation: fadeInUp 0.8s ease-out;
+        }
+
+        .hero p {
+            font-size: 1.15rem;
+            color: var(--text-secondary);
+            max-width: 600px;
+            margin: 0 auto 3rem;
+            animation: fadeInUp 0.8s ease-out 0.2s both;
+        }
+
+        .hero-cta {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-bottom: 4rem;
+            animation: fadeInUp 0.8s ease-out 0.4s both;
+        }
+
+        .btn-secondary {
+            padding: 0.75rem 1.5rem;
+            background: transparent;
+            color: var(--text-primary);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            font-family: 'Syne', sans-serif;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.95rem;
+        }
+
+        .btn-secondary:hover {
+            border-color: var(--accent-blue);
+            color: var(--accent-blue);
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* ===== CODE SNIPPET ===== */
+        .code-demo {
+            max-width: 600px;
+            margin: 0 auto 4rem;
+            padding: 2rem;
+            animation: fadeInUp 0.8s ease-out 0.6s both;
+        }
+
+        .code-demo pre {
+            background: rgba(0, 0, 0, 0.5);
+            padding: 1.5rem;
+            border-radius: 12px;
+            overflow-x: auto;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.9rem;
+            line-height: 1.6;
+            color: var(--accent-amber);
+            margin-bottom: 1rem;
+        }
+
+        .code-demo code {
+            color: inherit;
+        }
+
+        .code-demo button {
+            width: 100%;
+            padding: 0.75rem 1.5rem;
+            background: var(--accent-amber);
+            color: #000;
+            border: none;
+            border-radius: 8px;
+            font-family: 'Syne', sans-serif;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.95rem;
+        }
+
+        .code-demo button:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 16px rgba(245, 158, 11, 0.3);
+        }
+
+        .code-demo button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        /* ===== FEATURES GRID ===== */
+        .features {
+            padding: 100px 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .features-title {
+            font-family: 'Syne', sans-serif;
+            font-size: 2.5rem;
+            font-weight: 700;
+            text-align: center;
+            margin-bottom: 4rem;
+            letter-spacing: -1px;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+        }
+
+        .feature-card {
+            padding: 2rem;
+            transition: all 0.3s ease;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-8px);
+            background: rgba(255, 255, 255, 0.12);
+            border-color: rgba(245, 158, 11, 0.3);
+        }
+
+        .feature-icon {
+            width: 48px;
+            height: 48px;
+            background: linear-gradient(135deg, var(--accent-amber), var(--accent-blue));
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .feature-card h3 {
+            font-family: 'Syne', sans-serif;
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: 0.75rem;
+        }
+
+        .feature-card p {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+            line-height: 1.6;
+        }
+
+        /* ===== HOW IT WORKS ===== */
+        .how-it-works {
+            padding: 100px 2rem;
+            background: linear-gradient(180deg, transparent 0%, rgba(245, 158, 11, 0.05) 100%);
+        }
+
+        .how-title {
+            font-family: 'Syne', sans-serif;
+            font-size: 2.5rem;
+            font-weight: 700;
+            text-align: center;
+            margin-bottom: 4rem;
+            letter-spacing: -1px;
+        }
+
+        .steps-container {
+            max-width: 1000px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+        }
+
+        .step {
+            padding: 2rem;
+            text-align: center;
+            position: relative;
+        }
+
+        .step::before {
+            content: attr(data-step);
+            position: absolute;
+            top: -15px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 40px;
+            height: 40px;
+            background: var(--accent-amber);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #000;
+            font-family: 'Syne', sans-serif;
+            font-weight: 700;
+            font-size: 1.1rem;
+        }
+
+        .step h3 {
+            font-family: 'Syne', sans-serif;
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-top: 1.5rem;
+            margin-bottom: 0.75rem;
+        }
+
+        .step p {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+        }
+
+        /* ===== API STATUS ===== */
+        .api-status {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            padding: 1rem 1.5rem;
+            background: rgba(16, 185, 129, 0.2);
+            border: 1px solid rgba(16, 185, 129, 0.5);
+            border-radius: 8px;
+            color: #10b981;
+            font-size: 0.85rem;
+            display: none;
+            z-index: 999;
+            animation: slideIn 0.3s ease-out;
+        }
+
+        .api-status.show {
+            display: block;
+        }
+
+        .api-status.error {
+            background: rgba(239, 68, 68, 0.2);
+            border-color: rgba(239, 68, 68, 0.5);
+            color: #ef4444;
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateX(400px);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        /* ===== FOOTER ===== */
+        footer {
+            padding: 3rem 2rem;
+            border-top: 1px solid var(--border-color);
+            text-align: center;
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 2rem;
+        }
+
+        .footer-links {
+            display: flex;
+            gap: 2rem;
+            list-style: none;
+        }
+
+        .footer-links a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .footer-links a:hover {
+            color: var(--accent-amber);
+        }
+
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 768px) {
+            nav {
+                padding: 1rem;
+            }
+
+            .nav-links {
+                gap: 1rem;
+            }
+
+            .nav-links a {
+                font-size: 0.85rem;
+            }
+
+            .hero {
+                padding: 120px 1.5rem 60px;
+            }
+
+            .hero h1 {
+                font-size: 2rem;
+            }
+
+            .hero p {
+                font-size: 1rem;
+            }
+
+            .features, .how-it-works {
+                padding: 60px 1.5rem;
+            }
+
+            .features-title, .how-title {
+                font-size: 1.8rem;
+                margin-bottom: 2rem;
+            }
+
+            .features-grid {
+                gap: 1rem;
+            }
+
+            .feature-card, .step {
+                padding: 1.5rem;
+            }
+
+            .footer-content {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .api-status {
+                bottom: 1rem;
+                right: 1rem;
+                font-size: 0.8rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="animated-bg"></div>
+    <div class="blob blob-1"></div>
+    <div class="blob blob-2"></div>
+
+    <!-- NAVIGATION -->
+    <nav>
+        <div class="nav-container">
+            <div class="logo">CoreShift</div>
+            <ul class="nav-links">
+                <li><a href="#features">Features</a></li>
+                <li><a href="#how">How It Works</a></li>
+                <li><a href="https://coreshift-api-1.onrender.com/docs">API Docs</a></li>
+                <li><button class="btn-primary">Get Started</button></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- HERO -->
+    <section class="hero">
+        <h1>API Infrastructure for Modern Builders</h1>
+        <p>Authentication, Database, AI, File Storage — Everything you need in one powerful SDK</p>
+        
+        <div class="hero-cta">
+            <button class="btn-primary">Start Free</button>
+            <button class="btn-secondary">View Docs</button>
+        </div>
+
+        <!-- CODE DEMO WITH LIVE API INTEGRATION -->
+        <div class="code-demo glass">
+            <pre><code id="code-output">// Connected to CoreShift Backend API
+// https://coreshift-api-1.onrender.com
+
+// Test the live API connection below ↓
+// Chat with AI (Groq + Gemini)
+
+const response = await cs.ai.chat([
+  { role: 'user', content: 'Hello CoreShift!' }
+]);
+
+// Response from live API...
+console.log(response);</code></pre>
+            <button id="api-test-btn">Test Live API Connection</button>
+        </div>
+    </section>
+
+    <!-- FEATURES -->
+    <section class="features" id="features">
+        <h2 class="features-title">Powerful Features</h2>
+        <div class="features-grid">
+            <div class="feature-card glass">
+                <div class="feature-icon">🔐</div>
+                <h3>Authentication</h3>
+                <p>JWT-based, developer-friendly signup, login, and session management built-in.</p>
+            </div>
+            <div class="feature-card glass">
+                <div class="feature-icon">📊</div>
+                <h3>Database</h3>
+                <p>Real-time collections with flexible schema and powerful query capabilities.</p>
+            </div>
+            <div class="feature-card glass">
+                <div class="feature-icon">🤖</div>
+                <h3>AI Proxy</h3>
+                <p>Groq + Gemini integration with automatic fallback and streaming responses.</p>
+            </div>
+            <div class="feature-card glass">
+                <div class="feature-icon">📁</div>
+                <h3>File Storage</h3>
+                <p>Secure file uploads with public URLs, perfect for profiles and assets.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- HOW IT WORKS -->
+    <section class="how-it-works" id="how">
+        <h2 class="how-title">Get Started in 3 Steps</h2>
+        <div class="steps-container">
+            <div class="step glass" data-step="1">
+                <h3>Create Project</h3>
+                <p>Sign up and create a new project in your dashboard</p>
+            </div>
+            <div class="step glass" data-step="2">
+                <h3>Get API Key</h3>
+                <p>Copy your API key and install the CoreShift SDK</p>
+            </div>
+            <div class="step glass" data-step="3">
+                <h3>Build & Deploy</h3>
+                <p>Use our SDK to build amazing things in minutes</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer>
+        <div class="footer-content">
+            <div>&copy; 2026 CoreShift. All rights reserved.</div>
+            <ul class="footer-links">
+                <li><a href="https://github.com/raunakphull62-rgb/coreshift-api">GitHub</a></li>
+                <li><a href="https://coreshift-api-1.onrender.com/docs">Docs</a></li>
+                <li><a href="#features">Features</a></li>
+            </ul>
+        </div>
+    </footer>
+
+    <!-- API STATUS INDICATOR -->
+    <div id="api-status" class="api-status"></div>
+
+    <script>
+        // CoreShift Backend Configuration
+        const API_BASE_URL = 'https://coreshift-api-1.onrender.com';
+        const API_KEY = 'cs_live_IjBNK8tVfp4MzYj9BIWttLf07Y9OCpkmiGa1KhTTepM';
+
+        // Show Status Messages
+        function showStatus(message, isError = false) {
+            const statusEl = document.getElementById('api-status');
+            statusEl.textContent = message;
+            statusEl.classList.add('show');
+            statusEl.classList.toggle('error', isError);
+            
+            setTimeout(() => {
+                statusEl.classList.remove('show');
+            }, 4000);
+        }
+
+        // Test API Health Check
+        async function testAPIHealth() {
+            const btn = document.getElementById('api-test-btn');
+            const codeOutput = document.getElementById('code-output');
+            
+            btn.disabled = true;
+            btn.textContent = 'Testing API Health...';
+            
+            try {
+                const response = await fetch(`${API_BASE_URL}/ai/health`, {
+                    method: 'GET',
+                    headers: {
+                        'X-CoreShift-Key': API_KEY,
+                        'Content-Type': 'application/json'
+                    }
+                });
+
+                if (!response.ok) {
+                    throw new Error(`API Error: ${response.status}`);
+                }
+                
+                const data = await response.json();
+                
+                codeOutput.textContent = `// ✅ API Health Check PASSED
+// Backend: ${API_BASE_URL}
+// Status: Connected & Running
+
+const health = await cs.health();
+console.log(health);
+
+Response:
+${JSON.stringify(data, null, 2)}`;
+
+                showStatus('✅ Backend Connected! API is live.');
+                btn.textContent = 'Test Live API Connection';
+                
+            } catch (error) {
+                codeOutput.textContent = `// ❌ API Health Check FAILED
+// Error: ${error.message}
+// Endpoint: ${API_BASE_URL}/ai/health
+
+console.error('Health Check Error:');
+console.log('${error.message}')`;
+                
+                showStatus(`❌ Backend Error: ${error.message}`, true);
+                btn.textContent = 'Test Live API Connection';
+            }
+            
+            btn.disabled = false;
+        }
+
+        // Test AI Chat Endpoint
+        async function testAIChat() {
+            const btn = document.getElementById('api-test-btn');
+            const codeOutput = document.getElementById('code-output');
+            
+            btn.disabled = true;
+            btn.textContent = 'Testing AI Chat...';
+            
+            try {
+                const response = await fetch(`${API_BASE_URL}/ai/chat`, {
+                    method: 'POST',
+                    headers: {
+                        'X-CoreShift-Key': API_KEY,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        messages: [
+                            { role: 'user', content: 'Is CoreShift working? Respond with YES if you got this message.' }
+                        ]
+                    })
+                });
+
+                if (!response.ok) {
+                    throw new Error(`Chat API Error: ${response.status}`);
+                }
+                
+                const data = await response.json();
+                const aiResponse = data.response || data.choices?.[0]?.message?.content || 'Response received';
+                
+                codeOutput.textContent = `// ✅ AI Chat WORKING
+// Model: Groq (llama-3.3-70b)
+// Fallback: Gemini
+
+const response = await cs.ai.chat([
+  { role: 'user', content: 'Hello CoreShift!' }
+]);
+
+// Live AI Response:
+"${aiResponse}"`;
+
+                showStatus('✅ AI Chat Endpoint Working!');
+                btn.textContent = 'Test Live API Connection';
+                
+            } catch (error) {
+                codeOutput.textContent = `// ❌ AI Chat Error
+// Error: ${error.message}
+// Endpoint: ${API_BASE_URL}/ai/chat
+
+const response = await cs.ai.chat([...]);
+// Error: ${error.message}`;
+                
+                showStatus(`❌ Chat Error: ${error.message}`, true);
+                btn.textContent = 'Test Live API Connection';
+            }
+            
+            btn.disabled = false;
+        }
+
+        // Button Click Handler
+        document.getElementById('api-test-btn').addEventListener('click', async () => {
+            const btn = document.getElementById('api-test-btn');
+            
+            if (btn.textContent === 'Test Live API Connection') {
+                await testAPIHealth();
+            }
+        });
+
+        // Auto-check API on page load
+        window.addEventListener('load', async () => {
+            showStatus('Checking CoreShift backend...');
+            await testAPIHealth();
+        });
+    </script>
+</body>
+</html>

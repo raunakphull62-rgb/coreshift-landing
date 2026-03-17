@@ -1,0 +1,16 @@
+{
+  "name": "coreshift-landing",
+  "version": "1.0.0",
+  "description": "CoreShift - Developer Infrastructure Platform",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js"
+  },
+  "keywords": ["api", "developer", "infrastructure"],
+  "author": "Raunak",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.18.2"
+  }
+}
